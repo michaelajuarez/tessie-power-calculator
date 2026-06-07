@@ -108,6 +108,17 @@ button.primary:hover:not(:disabled) { background: var(--primary-hover); }
 button.secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
 button.secondary:hover:not(:disabled) { border-color: var(--primary); }
 
+.period-rates-label { font-size: 0.82rem; color: var(--text-muted); }
+
+.season-editor { display: flex; flex-direction: column; gap: 12px; }
+.season-editor-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.season-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.season-card-header { display: flex; align-items: center; gap: 8px; }
+.season-card-header select { flex: 1; }
+.season-dash { color: var(--text-muted); flex-shrink: 0; }
+.remove-btn { background: none; border: 1px solid var(--border); color: var(--text-muted); padding: 4px 10px; border-radius: var(--radius); flex-shrink: 0; }
+.remove-btn:hover { border-color: var(--error); color: var(--error); }
+
 .error { color: var(--error); font-size: 0.88rem; }
 .saved-rate { color: var(--text-muted); font-size: 0.88rem; }
 

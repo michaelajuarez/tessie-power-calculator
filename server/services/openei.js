@@ -9,13 +9,15 @@ async function getRatesByZip(zip, apiKey) {
       format: 'json',
       detail: 'full',
       address: zip,
-      limit: 25,
+      limit: 100,
+      current: true,
+      approved: true,
       api_key: apiKey,
     },
   });
 
   const items = data.items ?? [];
-  return items
+  const mapped = items
     .filter((r) => r.sector === 'Residential' && r.energyratestructure)
     .map((r) => ({
       id: r.label,
@@ -23,14 +25,32 @@ async function getRatesByZip(zip, apiKey) {
       utility: r.utility,
       sector: r.sector,
       flatRate: extractFlatRate(r),
+      maxRate: maxRateValue(r),
       isTOU: hasTOU(r),
-      // Store the full structure needed for TOU lookups
       rateStructure: {
         energyratestructure: r.energyratestructure,
         weekdaySchedule: r.energyweekdayschedule ?? null,
         weekendSchedule: r.energyweekendschedule ?? null,
       },
     }));
+
+  // Deduplicate by name — keep the version with the highest rates (most current)
+  const best = {};
+  for (const r of mapped) {
+    const key = `${r.utility}||${r.name}`;
+    if (!best[key] || r.maxRate > best[key].maxRate) best[key] = r;
+  }
+  return Object.values(best);
+}
+
+function maxRateValue(rate) {
+  let max = 0;
+  for (const period of rate.energyratestructure ?? []) {
+    for (const tier of period) {
+      max = Math.max(max, (tier.rate ?? 0) + (tier.adj ?? 0));
+    }
+  }
+  return max;
 }
 
 function extractFlatRate(rate) {

@@ -69,7 +69,8 @@ export default function Dashboard({ settings }) {
       }
 
       const raw = await fetchChargingHistory(settings, selectedVin, { after: from, before: to });
-      const data = calcSessionsCost(raw, rateplan);
+      const rateplanWithSeasons = rateplan ? { ...rateplan, customSeasons: settings.customSeasons } : null;
+      const data = calcSessionsCost(raw, rateplanWithSeasons);
       setSessions(data);
     } catch (err) {
       setError(err.message);

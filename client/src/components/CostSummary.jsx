@@ -13,7 +13,7 @@ function groupByMonth(sessions) {
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     const label = d.toLocaleString('en-US', { month: 'short', year: 'numeric' });
     if (!map[key]) map[key] = { key, label, kwh: 0, cost: 0, sessions: 0 };
-    map[key].kwh += s.energy_added ?? 0;
+    map[key].kwh += s.energy_used ?? s.energy_added ?? 0;
     map[key].cost += s.cost ?? 0;
     map[key].sessions += 1;
   }
@@ -25,7 +25,7 @@ export default function CostSummary({ sessions }) {
 
   if (!sessions.length) return null;
 
-  const totalKwh = sessions.reduce((s, r) => s + (r.energy_added ?? 0), 0);
+  const totalKwh = sessions.reduce((s, r) => s + (r.energy_used ?? r.energy_added ?? 0), 0);
   const totalCost = sessions.reduce((s, r) => s + (r.cost ?? 0), 0);
   const hasCost = totalCost > 0;
 

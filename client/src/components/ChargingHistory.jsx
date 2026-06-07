@@ -24,7 +24,7 @@ export default function ChargingHistory({ sessions, loading, error }) {
           <tr>
             <th>Date</th>
             <th>Location</th>
-            <th>kWh Added</th>
+            <th>kWh Used</th>
             <th>Cost</th>
             <th>Rate Plan</th>
           </tr>
@@ -34,7 +34,7 @@ export default function ChargingHistory({ sessions, loading, error }) {
             <tr key={s.id ?? i}>
               <td>{s.started_at ? fmt.format(new Date(s.started_at * 1000)) : '—'}</td>
               <td>{s.saved_location ?? s.location ?? '—'}</td>
-              <td>{(s.energy_added ?? 0).toFixed(2)}</td>
+              <td>{(s.energy_used ?? s.energy_added ?? 0).toFixed(2)}</td>
               <td>{s.cost != null ? fmtCost.format(s.cost) : '—'}</td>
               <td>{s.rateLabel ?? '—'}</td>
             </tr>
